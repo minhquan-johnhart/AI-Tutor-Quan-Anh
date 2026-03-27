@@ -40,7 +40,7 @@ with st.sidebar:
     st.markdown("Dự án bởi: **Minh Quân & Hoàng Anh**")
 
     st.divider()
-    st.subheader("👨‍🏫 Quản lý Lớp học")
+    st.subheader("👨‍🏫Lớp học")
     
     # Tạo mật mã để chỉ giáo viên (Quân & Anh) mới mở được nút nạp file
     password = st.text_input("Nhập mật mã Giáo viên", type="password")
@@ -57,7 +57,7 @@ with st.sidebar:
         st.write("1. Chế độ giáo viên : Đưa ra hướng dẫn cho học sinh học tập thay vì đưa ra lời giải.")
         st.write("2. Thanh sáng tạo : Số càng lớn thì Frameworks Chatbots trả lời càng bay bổng và ngược lại.")
         st.write("3. Xóa lịch sử bài học : Xóa lịch sử cuộc trò chuyện hiện tại.")
-    
+        st.write("4. Chức Năng Lớp Học : Giáo viên sẽ gửi mật khẩu và file .txt cho học sinh để học sinh tự mở và cài file để học theo hướng dẫn của Chatbots")
     st.divider()
     # Chế độ Giáo viên
     teacher_mode = st.toggle("👨‍🏫 Chế độ Giáo viên (Chỉ gợi ý)", value=False)
@@ -85,7 +85,7 @@ if "messages" not in st.session_state:
 
 # --- 4. GIAO DIỆN CHÍNH ---
 st.title("🌐 Frameworks Chatbots")
-st.caption("Chuyên gia hỗ trợ học tập - Được tạo ra bởi M.Quân & H.Anh để giúp đỡ học sinh và giáo viên.(Verson : Demo-2)")
+st.caption("Chuyên gia hỗ trợ học tập - Được tạo ra bởi M.Quân & H.Anh để giúp đỡ học sinh và giáo viên.(Verson : Demo2.0)")
 
 # Hiển thị lịch sử chat với Avatar sinh động
 for msg in st.session_state.messages:
