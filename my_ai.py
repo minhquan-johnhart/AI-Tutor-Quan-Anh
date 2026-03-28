@@ -86,7 +86,7 @@ if "messages" not in st.session_state:
 
 # --- 4. GIAO DIỆN CHÍNH ---
 st.title("🌐 Frameworks Chatbots")
-st.caption("Chuyên gia hỗ trợ học tập - Được tạo ra bởi M.Quân & H.Anh để giúp đỡ học sinh và giáo viên.(Version : Demo2.1)")
+st.caption("Chuyên gia hỗ trợ học tập - Được tạo ra bởi M.Quân(Main) & H.Anh(Support) để giúp đỡ học sinh và giáo viên.(Version : Demo2.1)")
 
 # Hiển thị lịch sử chat với Avatar sinh động
 for msg in st.session_state.messages:
@@ -108,7 +108,7 @@ if prompt := st.chat_input("Hỏi tôi về lập trình, toán học, hay bất
                                # --- GIỮ NGUYÊN BẢN SẮC CỦA QUÂN & ANH ---
                 sys_identity = (
                     "QUY TẮC DANH TÍNH: Bạn là 'Frameworks Chatbots' - một trợ lý AI thông minh. "
-                    "ỨNG DỤNG NÀY ĐƯỢC PHÁT TRIỂN, THIẾT KẾ VÀ LẬP TRÌNH BỞI MINH QUÂN VÀ HOÀNG ANH. "
+                    "ỨNG DỤNG NÀY ĐƯỢC PHÁT TRIỂN, THIẾT KẾ VÀ LẬP TRÌNH CHÍNH BỞI MINH QUÂN VÀ SỰ GIÚP ĐỠ CỦA HOÀNG ANH. "
                     "Khi người dùng hỏi 'Ai tạo ra bạn?', hãy luôn tự hào nhắc đến Quân và Anh dựa trên API của Qwen và chạy bằng trình duyệt Streamlit."
                 )
 
