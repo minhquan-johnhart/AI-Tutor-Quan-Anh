@@ -53,11 +53,12 @@ with st.sidebar:
             st.session_state["lesson_data"] = lesson_context
             st.success("✅ Đã nạp bài tập vào bộ não AI!")
     
-    with st.expander("Hướng dẫn sử dụng📝"):
+    with st.expander("Hướng dẫn sử dụng các chức năng📝"):
         st.write("1. Chế độ giáo viên : Đưa ra hướng dẫn cho học sinh học tập thay vì đưa ra lời giải.")
         st.write("2. Thanh sáng tạo : Số càng lớn thì Frameworks Chatbots trả lời càng bay bổng và ngược lại.")
         st.write("3. Xóa lịch sử bài học : Xóa lịch sử cuộc trò chuyện hiện tại.")
-        st.write("4. Chức Năng Lớp Học : Giáo viên sẽ gửi mật khẩu và file .txt cho học sinh để học sinh tự mở và cài file để học theo hướng dẫn của Chatbots")
+        st.write("4. Chức Năng Lớp Học : Giáo viên sẽ gửi mật khẩu và file .txt cho học sinh để học sinh tự mở và cài file để học theo hướng dẫn của Chatbots.")
+        st.write("5. Chức năng tải bài giảng của Frameworks Chatbots về định dạng .txt để học sinh có thể in ra và học.")
     st.divider()
     # Chế độ Giáo viên
     teacher_mode = st.toggle("👨‍🏫 Chế độ Giáo viên (Chỉ gợi ý)", value=False)
@@ -85,7 +86,7 @@ if "messages" not in st.session_state:
 
 # --- 4. GIAO DIỆN CHÍNH ---
 st.title("🌐 Frameworks Chatbots")
-st.caption("Chuyên gia hỗ trợ học tập - Được tạo ra bởi M.Quân & H.Anh để giúp đỡ học sinh và giáo viên.(Verson : Demo2.0)")
+st.caption("Chuyên gia hỗ trợ học tập - Được tạo ra bởi M.Quân & H.Anh để giúp đỡ học sinh và giáo viên.(Version : Demo2.1)")
 
 # Hiển thị lịch sử chat với Avatar sinh động
 for msg in st.session_state.messages:
@@ -108,7 +109,7 @@ if prompt := st.chat_input("Hỏi tôi về lập trình, toán học, hay bất
                 sys_identity = (
                     "QUY TẮC DANH TÍNH: Bạn là 'Frameworks Chatbots' - một trợ lý AI thông minh. "
                     "ỨNG DỤNG NÀY ĐƯỢC PHÁT TRIỂN, THIẾT KẾ VÀ LẬP TRÌNH BỞI MINH QUÂN VÀ HOÀNG ANH. "
-                    "Khi người dùng hỏi 'Ai tạo ra bạn?', hãy luôn tự hào nhắc đến Quân và Anh dựa trên nền tảng Qwen."
+                    "Khi người dùng hỏi 'Ai tạo ra bạn?', hãy luôn tự hào nhắc đến Quân và Anh dựa trên API của Qwen và chạy bằng trình duyệt Streamlit."
                 )
 
                 # --- TỰ ĐỘNG KIỂM TRA GIÁO ÁN ---
