@@ -3,7 +3,7 @@ from huggingface_hub import InferenceClient
 import random # Thư viện để xoay vòng Token
 
 # --- 1. CẤU HÌNH GIAO DIỆN & STYLE (GIỮ NGUYÊN BẢN SẮC) ---
-st.set_page_config(page_title="AI Tutor - Frameworks", layout="wide", page_icon="🎓")
+st.set_page_config(page_title="Frameworks Chatbots", layout="wide", page_icon="🎓")
 
 # CSS tùy chỉnh giao diện
 st.markdown("""
@@ -48,12 +48,17 @@ with st.sidebar:
         st.write("4. 🛡️Chế độ giám sát: AI sẽ phân tích câu trả lời của học sinh sau khi làm bài tập và ngăn chặn các câu trả lời copy từ AI khác.")
         st.write("5. 🔥Độ sáng tạo: Biến số càng lớn thì AI trả lời càng bay bổng và ngược lại.")
         st.write("6. 🗑️Xóa lịch sử chat: Nhằm reset lịch sử trò truyện với AI")
-
+    with st.expander("Ghi chú cập nhật"):
+        st.write("Version 1.0 : Bản cập nhật sơ khai của Frameworks Chatbots nhằm thử nghiệm các tính năng cơ bản và cốt lõi nhất.")
+        st.write("Version 2.0 : Cập nhật thêm tính năng 👨‍🏫Lớp học và thay thế mục Cách tạo ra tôi thành Hướng dẫn sử dụng.")
+        st.write("Version 2.1 : Cập nhật lại tính nắng 👨‍🏫Lớp học và cải thiện giao diện tổng thể.")
+        st.write("Version 2.7 : Cập nhật thêm về hướng dẫn sử dụng các tính năng và thêm các tính năng như 🚫Chế độ tập trung và 🛡️Chế độ giám sát.")
+        st.write("Version 2.8 ( hiện tại ) : Cải thiện tính năng 🚫Chế độ tập trung và thêm mục Ghi chú cập nhật cũng như cải thiện chất lượng phản hồi của Frameworks Chatbots")
     st.divider()
     # Các chế độ hoạt động
-    teacher_mode = st.toggle("👨‍🏫 Chế độ Giáo viên (Chỉ gợi ý)", value=False)
+    teacher_mode = st.toggle("👨‍🏫 Chế độ Giáo viên (Chỉ gợi ý)", value=True)
     study_only = st.toggle("🚫 Chế độ tập trung (Chặn chuyện nhảm)", value=True)
-    anti_ai_copy = st.toggle("🛡️ Chế độ giám sát (Chống Copy AI)", value=True)
+    anti_ai_copy = st.toggle("🛡️ Chế độ giám sát (Chống Copy AI)", value=False)
     
     st.divider()
     temp = st.slider("🔥 Độ sáng tạo", 0.1, 1.0, 0.7)
@@ -79,7 +84,7 @@ if "messages" not in st.session_state:
 
 # --- 4. GIAO DIỆN CHÍNH ---
 st.title("🌐 Frameworks Chatbots")
-st.caption("Chuyên gia hỗ trợ học tập - Developed by M.Quân(Main Dev) & H.Anh(Support Dev) (Version:Demo2.7 - Friendly Edition)")
+st.caption("Chuyên gia hỗ trợ học tập - Developed by M.Quân(Main Dev) & H.Anh(Support Dev) (Version:Demo2.8)")
 
 # Hiển thị lịch sử chat
 for msg in st.session_state.messages:
@@ -110,7 +115,7 @@ if len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] 
                 if study_only:
                     sys_text += (
                         "\n[LỆNH NGHIÊM NGẶT]: Bạn ĐANG Ở CHẾ ĐỘ TẬP TRUNG CAO ĐỘ. "
-                        "1. TUYỆT ĐỐI KHÔNG trả lời các câu hỏi về đời sống, ăn uống, ngủ nghỉ, cảm xúc cá nhân hoặc tán gẫu (Ví dụ: 'Đi ngủ không?', 'Ăn gì?', 'Bạn khỏe không?'). "
+                        "1. TUYỆT ĐỐI KHÔNG trả lời các câu hỏi về đời sống, ăn uống, ngủ nghỉ, chuyện không phải học tập hoặc tán gẫu (Ví dụ: 'Đi ngủ không?', 'Ăn gì?', 'Bạn khỏe không?'). "
                         "2. Nếu gặp câu hỏi nhảm, bạn chỉ được phép trả lời duy nhất một kiểu: 'Hì, mình là AI hỗ trợ học tập, mình chỉ có thể giúp bạn giải quyết các vấn đề học tập thôi."
                         "3. Không được đưa ra lời khuyên ngoài giáo dục."
                     )
