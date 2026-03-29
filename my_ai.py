@@ -79,7 +79,7 @@ if "messages" not in st.session_state:
 
 # --- 4. GIAO DIỆN CHÍNH ---
 st.title("🌐 Frameworks Chatbots")
-st.caption("Chuyên gia hỗ trợ học tập - Developed by M.Quân(Main Dev) & H.Anh(Support Dev) (Version: 2.7 - Friendly Edition)")
+st.caption("Chuyên gia hỗ trợ học tập - Developed by M.Quân(Main Dev) & H.Anh(Support Dev) (Version:Demo2.7 - Friendly Edition)")
 
 # Hiển thị lịch sử chat
 for msg in st.session_state.messages:
