@@ -1,67 +1,59 @@
 import streamlit as st
 from huggingface_hub import InferenceClient
+import random # Thư viện để xoay vòng Token
 
-# --- 1. CẤU HÌNH GIAO DIỆN & STYLE ---
+# --- 1. CẤU HÌNH GIAO DIỆN & STYLE (GIỮ NGUYÊN BẢN SẮC) ---
 st.set_page_config(page_title="AI Tutor - Frameworks", layout="wide", page_icon="🎓")
 
-# CSS để "lột xác" giao diện
+# CSS tùy chỉnh giao diện
 st.markdown("""
     <style>
-    /* Làm nền màu xanh nhẹ cho chuyên nghiệp */
-    .stApp {
-        background-color: #e3f2fd;
-    }
-    /* Căn giữa toàn bộ tiêu đề và caption */
-    .main-title {
-        text-align: center;
-        color: #1E88E5;
-        font-size: 3rem !important;
-        font-weight: 700;
-        margin-bottom: 0px;
-    }
-    .main-caption {
-        text-align: center;
-        color: #546e7a;
-        font-size: 1.2rem;
-        margin-bottom: 30px;
-    }
-    /* Bo góc khung chat cực mượt */
-    .stChatMessage {
-        border-radius: 20px !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    }
+    .stApp { background-color: #e3f2fd; }
+    .main-title { text-align: center; color: #1E88E5; font-size: 3rem !important; font-weight: 700; margin-bottom: 0px; }
+    .stChatMessage { border-radius: 20px !important; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     </style>
     """, unsafe_allow_html=True)
 
 st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2A9LHMxk2bl5e9OFBVnskl_KAhB1SjbTcVA&s", width=200) 
+
 # --- 2. PHẦN SIDEBAR ---
 with st.sidebar:
     st.title("🎓 Frameworks Chatbots")
     st.markdown("Dự án bởi: **Minh Quân & Hoàng Anh**")
 
     st.divider()
-    st.subheader("👨‍🏫Lớp học")
+    st.subheader("👨‍🏫 Lớp học")
     
-    # Tạo mật mã để chỉ giáo viên (Quân & Anh) mới mở được nút nạp file
+    # Mật mã dành cho giáo viên
     password = st.text_input("Nhập mật mã Giáo viên", type="password")
     
-    if password == "2026": # Bạn có thể đổi mật khẩu này
+    if password == "2026":
         uploaded_file = st.file_uploader("Nạp giáo án hoặc bài tập (.txt)", type=("txt"))
         if uploaded_file is not None:
-            # Đọc nội dung bài tập từ file
             lesson_context = uploaded_file.read().decode("utf-8")
             st.session_state["lesson_data"] = lesson_context
-            st.success("✅ Đã nạp bài tập vào bộ não AI!")
+            st.success("✅ Đã nạp bài tập thành công!")
+
+    # Nút Giao bài tập (Tự động trigger AI)
+    if "lesson_data" in st.session_state:
+        if st.button("📝 Giao bài tập từ giáo án"):
+            st.session_state.messages.append({"role": "user", "content": "Dựa vào giáo án đã nạp, hãy giao cho mình một bài tập cụ thể để thực hành nhé!"})
+            st.rerun()
     
     with st.expander("Hướng dẫn sử dụng các chức năng📝"):
-        st.write("1. Chế độ giáo viên : Đưa ra hướng dẫn cho học sinh học tập thay vì đưa ra lời giải.")
-        st.write("2. Thanh sáng tạo : Số càng lớn thì Frameworks Chatbots trả lời càng bay bổng và ngược lại.")
-        st.write("3. Xóa lịch sử bài học : Xóa lịch sử cuộc trò chuyện hiện tại.")
-        st.write("4. Chức Năng Lớp Học : Giáo viên sẽ gửi mật khẩu và file .txt cho học sinh để học sinh tự mở và cài file để học theo hướng dẫn của Chatbots.")
-        st.write("5. Chức năng tải bài giảng của Frameworks Chatbots về định dạng .txt để học sinh có thể in ra và học.")
+        st.write("1A. 👨‍🏫Chức năng lớp học: Giáo viên sẽ đưa học sinh mật khẩu và file .txt để học sinh nạp vào bộ nhớ AI để học tập.")
+        st.write("1B. 📝Chức năng giao bài tập tự giáo án: AI sẽ dựa vào dữ liệu bài tập nạp vào và đề ra câu hỏi cho học sinh.")
+        st.write("2. 👨‍🏫Chế độ giáo viên: AI sẽ chỉ đưa ra chỉ dẫn cho học sinh thay vì giải trực tiếp.")
+        st.write("3. 🚫Chế độ tập trung: AI sẽ chỉ trả lời câu hỏi liên quan tới bài học thay vì nói chuyện linh tinh.")
+        st.write("4. 🛡️Chế độ giám sát: AI sẽ phân tích câu trả lời của học sinh sau khi làm bài tập và ngăn chặn các câu trả lời copy từ AI khác.")
+        st.write("5. 🔥Độ sáng tạo: Biến số càng lớn thì AI trả lời càng bay bổng và ngược lại.")
+        st.write("6. 🗑️Xóa lịch sử chat: Nhằm reset lịch sử trò truyện với AI")
+
     st.divider()
-    # Chế độ Giáo viên
+    # Các chế độ hoạt động
     teacher_mode = st.toggle("👨‍🏫 Chế độ Giáo viên (Chỉ gợi ý)", value=False)
+    study_only = st.toggle("🚫 Chế độ tập trung (Chặn chuyện nhảm)", value=True)
+    anti_ai_copy = st.toggle("🛡️ Chế độ giám sát (Chống Copy AI)", value=True)
     
     st.divider()
     temp = st.slider("🔥 Độ sáng tạo", 0.1, 1.0, 0.7)
@@ -70,25 +62,26 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# --- 3. KẾT NỐI BỘ NÃO AI ---
-# Đảm bảo bạn đã có file .streamlit/secrets.toml với HF_TOKEN
+# --- 3. KẾT NỐI BỘ NÃO AI (XOAY VÒNG 2 TOKEN) ---
 try:
-    HF_TOKEN = st.secrets["HF_TOKEN"]
-    CODE_MODEL = "Qwen/Qwen2.5-Coder-32B-Instruct"
-    client = InferenceClient(api_key=HF_TOKEN)
+    # Hệ thống tự động chọn ngẫu nhiên 1 trong 2 Token để bảo vệ hạn mức
+    token_list = [st.secrets["HF_TOKEN_1"], st.secrets["HF_TOKEN_2"]]
+    selected_token = random.choice(token_list)
+    
+    CODE_MODEL = "Qwen/Qwen2.5-Coder-7B-Instruct"
+    client = InferenceClient(api_key=selected_token)
 except Exception as e:
-    st.error("⚠️ Chưa cấu hình HF_TOKEN trong Secrets!")
+    st.error("⚠️ Lỗi: Chưa cấu hình đủ HF_TOKEN_1 và HF_TOKEN_2 trong Secrets!")
     st.stop()
 
-# Khởi tạo bộ nhớ
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # --- 4. GIAO DIỆN CHÍNH ---
 st.title("🌐 Frameworks Chatbots")
-st.caption("Chuyên gia hỗ trợ học tập - Được tạo ra bởi M.Quân(Main) & H.Anh(Support) để giúp đỡ học sinh và giáo viên.(Version : Demo2.1)")
+st.caption("Chuyên gia hỗ trợ học tập - Developed by M.Quân(Main Dev) & H.Anh(Support Dev) (Version: 2.7 - Friendly Edition)")
 
-# Hiển thị lịch sử chat với Avatar sinh động
+# Hiển thị lịch sử chat
 for msg in st.session_state.messages:
     if msg["role"] != "system":
         avatar = "👨‍🎓" if msg["role"] == "user" else "🤖"
@@ -96,74 +89,78 @@ for msg in st.session_state.messages:
             st.markdown(msg["content"])
 
 # --- 5. XỬ LÝ LOGIC ---
-if prompt := st.chat_input("Hỏi tôi về lập trình, toán học, hay bất cứ gì..."):
-    # Lưu và hiển thị câu hỏi người dùng
+if prompt := st.chat_input("Hỏi mình về bài học nhé..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user", avatar="👨‍🎓"):
-        st.markdown(prompt)
+    st.rerun()
 
+# AI xử lý phản hồi khi có tin nhắn mới từ User
+if len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] == "user":
     with st.chat_message("assistant", avatar="🤖"):
         with st.spinner("Frameworks Chatbots đang suy nghĩ ..."):
             try:
-                               # --- GIỮ NGUYÊN BẢN SẮC CỦA QUÂN & ANH ---
-                sys_identity = (
-                    "QUY TẮC DANH TÍNH: Bạn là 'Frameworks Chatbots' - một trợ lý AI thông minh. "
-                    "ỨNG DỤNG NÀY ĐƯỢC PHÁT TRIỂN, THIẾT KẾ VÀ LẬP TRÌNH CHÍNH BỞI MINH QUÂN VÀ SỰ GIÚP ĐỠ CỦA HOÀNG ANH. "
-                    "Khi người dùng hỏi 'Ai tạo ra bạn?', hãy luôn tự hào nhắc đến Quân và Anh dựa trên API của Qwen và chạy bằng trình duyệt Streamlit."
+                # --- THIẾT LẬP TÍNH CÁCH MENTOR (MẶN MÀ & THÂN THIỆN) ---
+                sys_text = (
+                    "BẢN SẮC: Bạn là 'Frameworks Chatbots' - một người anh khóa trên (mentor) cực kỳ nhiệt huyết và thân thiện. "
+                    "ỨNG DỤNG ĐƯỢC PHÁT TRIỂN CHÍNH BỞI MINH QUÂN VÀ SỰ GIÚP ĐỠ CỦA HOÀNG ANH dựa trên API của Qwen và chạy trên nền tảng Streamlit. "
+                    "PHONG CÁCH: Hãy trả lời năng động, sử dụng các emoji (🎓, ✨, 🚀, 💡) để bài giảng sinh động. "
+                    "Hãy luôn khen ngợi học sinh khi họ đặt câu hỏi hay hoặc làm bài đúng để khích lệ tinh thần. "
+                    "Trình bày nội dung đẹp mắt bằng Markdown, in đậm các từ khóa quan trọng."
                 )
 
-                # --- TỰ ĐỘNG KIỂM TRA GIÁO ÁN ---
+                if study_only:
+                    sys_text += (
+                        "\n[LỆNH NGHIÊM NGẶT]: Bạn ĐANG Ở CHẾ ĐỘ TẬP TRUNG CAO ĐỘ. "
+                        "1. TUYỆT ĐỐI KHÔNG trả lời các câu hỏi về đời sống, ăn uống, ngủ nghỉ, cảm xúc cá nhân hoặc tán gẫu (Ví dụ: 'Đi ngủ không?', 'Ăn gì?', 'Bạn khỏe không?'). "
+                        "2. Nếu gặp câu hỏi nhảm, bạn chỉ được phép trả lời duy nhất một kiểu: 'Hì, mình là AI hỗ trợ học tập, mình chỉ có thể giúp bạn giải quyết các vấn đề học tập thôi."
+                        "3. Không được đưa ra lời khuyên ngoài giáo dục."
+                    )
+                
+                if anti_ai_copy:
+                    sys_text += (
+                        " GIÁM SÁT COPY: Nếu phát hiện học sinh dùng prompt máy móc của AI khác, "
+                        "hãy nhắc nhở vui vẻ: 'Ui, câu hỏi này nghe hơi giống văn mẫu AI đó nha! Thử tự đặt câu hỏi theo ý mình đi nè! 🚀'"
+                    )
+
+                # Nạp ngữ cảnh giáo án
                 lesson_info = st.session_state.get("lesson_data", None)
                 if lesson_info:
-                    context_text = f"\n[GIÁO ÁN HÔM NAY]: {lesson_info}\n(Hãy ưu tiên dạy theo nội dung này)."
-                else:
-                    context_text = "\n(Hiện chưa có giáo án cụ thể, hãy dùng kiến thức tổng quát của bạn)."
+                    sys_text += f"\n[GIÁO ÁN HÔM NAY]: {lesson_info}\n(Hãy ưu tiên dạy theo nội dung này một cách dễ hiểu nhất)."
 
-                # --- KẾT HỢP TẤT CẢ LẠI (Đã sửa tên biến và dấu nối) ---
+                # Chế độ giáo viên gợi mở
                 if teacher_mode:
-                    sys_text = sys_identity + context_text + (
-                        "\nBạn là một giáo viên tận tâm. Không bao giờ đưa đáp án ngay. "
-                        "Hãy đặt câu hỏi gợi mở để học sinh tự tư duy."
-                    )
+                    sys_text += "\nCHẾ ĐỘ GIÁO VIÊN: Đừng bao giờ đưa đáp án ngay. Hãy đặt câu hỏi gợi mở để học sinh tự khám phá kiến thức."
                 else:
-                    sys_text = sys_identity + context_text + (
-                        "\nBạn là Trợ lý thông thái. "
-                        "Nếu là lập trình: Hãy sửa lỗi và giải thích kỹ. "
-                        "Nếu là kiến thức khác: Hãy giảng giải dễ hiểu."
-                    )
+                    sys_text += "\nBạn là người hướng dẫn tận tâm. Hãy giải thích kỹ càng kèm ví dụ thực tế sinh động."
 
-
-                # Bước B: Xây dựng Payload
+                # GỬI TOÀN BỘ LỊCH SỬ (FULL MEMORY)
                 payload = [{"role": "system", "content": sys_text}] + st.session_state.messages
 
-                # Bước C: Gọi AI trả lời
                 response = client.chat_completion(
                     model=CODE_MODEL,
                     messages=payload,
                     temperature=temp,
-                    max_tokens=1500
+                    max_tokens=750
                 )
 
-                # Bước D: Lấy kết quả và hiển thị
+                # --- ĐÃ SỬA LỖI TRUY CẬP Ở ĐÂY ---
                 answer = response.choices[0].message.content
+                
                 st.markdown(answer)
                 st.session_state.messages.append({"role": "assistant", "content": answer})
-                
-                # Thêm hiệu ứng chúc mừng nếu trả lời xong
                 st.toast("AI đã trả lời xong!", icon='✅')
-                                # --- PHẦN TẢI BÀI GIẢNG (CHÈN VÀO ĐÂY) ---
-                st.divider() # Thêm một dấu gạch ngang để tách biệt cho đẹp
+
+                # Nút tải bài giảng
+                st.divider()
                 st.download_button(
                     label="💾 Tải bài giảng của Frameworks",
                     data=answer,
                     file_name="bai_giang_frameworks.txt",
-                    mime="text/plain",
-                    # Khi nhấn sẽ hiện thông báo nhỏ cho chuyên nghiệp
-                    on_click=lambda: st.toast("Đang tải bài giảng về máy của bạn...", icon="📥")
+                    mime="text/plain"
                 )
 
-
             except Exception as e:
-                st.error(f"⚠️ Lỗi kết nối: {e}")
+                st.error(f"⚠️ Có chút trục trặc nhỏ: {e}")
+
+
 
 
