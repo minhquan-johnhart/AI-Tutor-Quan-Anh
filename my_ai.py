@@ -122,7 +122,7 @@ if len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] 
                 
                 if anti_ai_copy:
                     sys_text += (
-                        " GIÁM SÁT COPY: Nếu phát hiện học sinh dùng prompt máy móc của AI khác, "
+                        " GIÁM SÁT COPY: Nếu phát hiện học sinh dùng prompt máy móc của AI khác như của Gemini hay ChatGPT, "
                         "hãy nhắc nhở vui vẻ: 'Ui, câu hỏi này nghe hơi giống văn mẫu AI đó nha! Thử tự đặt câu hỏi theo ý mình đi nè! 🚀'"
                     )
 
