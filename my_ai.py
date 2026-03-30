@@ -39,6 +39,13 @@ with st.sidebar:
     st.title("🎓 Frameworks Chatbots")
     st.markdown("Dự án bởi: **Minh Quân & Hoàng Anh**")
     st.divider()
+    st.image(
+        "https://quickchart.io/qr?text=https%3A%2F%2Fai-tutor-quan-anh-gtbmxeoelebxemxvgzwyis.streamlit.app%2F&size=200", 
+        caption="📱 Quét mã để vào học cùng Framework Chatbots ngay!", 
+        width=200
+    )
+
+    st.divider()
     # 1. Mục Tiến độ học tập
     st.subheader("📊 Tiến độ học tập")
     # Học sinh nhập tên ở đây (chỉ khai báo 1 lần duy nhất)
@@ -102,12 +109,6 @@ with st.sidebar:
     if st.button("🗑️ Xóa lịch sử bài học"):
         st.session_state.messages = []
         st.rerun()
-    st.divider()
-    st.image(
-        "https://quickchart.io/qr?text=https%3A%2F%2Fai-tutor-quan-anh-gtbmxeoelebxemxvgzwyis.streamlit.app%2F&size=200", 
-        caption="📱 Quét mã để vào học cùng Framework Chatbots ngay!", 
-        width=200
-    )
 # --- 3. KẾT NỐI BỘ NÃO AI (XOAY VÒNG 2 TOKEN) ---
 try:
     # Hệ thống tự động chọn ngẫu nhiên 1 trong 2 Token để bảo vệ hạn mức
