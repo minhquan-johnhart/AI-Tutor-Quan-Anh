@@ -7,16 +7,15 @@ URL_GSHEET = "https://script.google.com/macros/s/AKfycbw2THtNIWws5_inxQfYaMuquUQ
 # Khởi tạo bộ đếm tiến độ
 if "stats" not in st.session_state:
     st.session_state.stats = {"correct": 0, "wrong": 0, "ai_violation": 0}
-
-def gui_ve_google_sheets(ten_hoc_sinh):
-    # Dữ liệu gửi đi
+# Sửa lại hàm này ở phần đầu code của bạn
+def gui_ve_google_sheets(ten_hoc_sinh, ket_qua): # Thêm tham số ket_qua ở đây
     payload = {
         "student_id": ten_hoc_sinh,
+        "status": ket_qua, # Gửi trạng thái Đúng/Sai lên Sheets
         "stats": st.session_state.stats
     }
     try:
-        # Nhớ dùng dấu = để truyền tham số nhé
-        requests.post(URL_GSHEET, json=payload, timeout=2)
+        requests.post(URL_GSHEET, json=payload, timeout=5)
     except:
         pass
 
@@ -73,7 +72,8 @@ with st.sidebar:
                 "content": "Dựa vào giáo án đã nạp, hãy giao cho mình một bài tập cụ thể để thực hành nhé!"
             })
             st.rerun()
-  
+
+    st.divider()  
     with st.expander("Hướng dẫn sử dụng các chức năng📝"):
         st.write("1. 📊 Chức năng tiến độ học tập : Hiển thị số câu trả lời đúng, sai và bị nghi ngờ và thông báo về máy chủ của giáo viên")
         st.write("2A. 👨‍🏫Chức năng lớp học: Giáo viên sẽ đưa học sinh mật khẩu và file .txt để học sinh nạp vào bộ nhớ AI để học tập.")
@@ -89,7 +89,8 @@ with st.sidebar:
         st.write("Version 2.1 : Cập nhật lại tính nắng 👨‍🏫Lớp học và cải thiện giao diện tổng thể.")
         st.write("Version 2.7 : Cập nhật thêm về hướng dẫn sử dụng các tính năng và thêm các tính năng như 🚫Chế độ tập trung và 🛡️Chế độ giám sát.")
         st.write("Version 2.8 : Cải thiện tính năng 🚫Chế độ tập trung và thêm mục Ghi chú cập nhật cũng như cải thiện chất lượng phản hồi của Frameworks Chatbots")
-        st.write("Version 2.10 ( Hiện tại ) : Cập nhật mục 📊 Tiến độ học tập và ghi nhận điểm trên sever chủ cũng như cải thiện lại các chức năng sẵn có.") 
+        st.write("Version 2.10 : Cập nhật mục 📊 Tiến độ học tập và ghi nhận điểm trên sever chủ cũng như cải thiện lại các chức năng sẵn có.") 
+        st.write("Version 2.11 ( Hiện tại ) : Cải thiện tính năng 📊 Tiến độ học tập và ghi nhận điểm cũng như vá lại một số lỗi nhỏ xung đột")
     st.divider()
     # Các chế độ hoạt động
     teacher_mode = st.toggle("👨‍🏫 Chế độ Giáo viên (Chỉ gợi ý)", value=True)
@@ -120,62 +121,68 @@ if "messages" not in st.session_state:
 
 # --- 4. GIAO DIỆN CHÍNH ---
 st.title("🌐 Frameworks Chatbots")
-st.caption("Chuyên gia hỗ trợ học tập và giám sát học tập - Developed by M.Quân(Main Dev) & H.Anh(Support Dev) (Version:Demo2.10)")
+st.caption("Chuyên gia hỗ trợ học tập và giám sát học tập - Developed by M.Quân(Main Dev) & H.Anh(Support Dev) (Version:Demo2.11 - Final)")
 
-# Hiển thị lịch sử chat
+# --- 5. HIỂN THỊ LỊCH SỬ CHAT ---
+# Vòng lặp này cực kỳ quan trọng để giữ lại tin nhắn cũ trên màn hình
 for msg in st.session_state.messages:
     if msg["role"] != "system":
         avatar = "👨‍🎓" if msg["role"] == "user" else "🤖"
         with st.chat_message(msg["role"], avatar=avatar):
             st.markdown(msg["content"])
-# --- 5. XỬ LÝ LOGIC ---
+
+# --- 6. XỬ LÝ NHẬP LIỆU TỪ NGƯỜI DÙNG ---
 if prompt := st.chat_input("Hỏi mình về bài học nhé..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.rerun()
 
-# AI xử lý phản hồi khi có tin nhắn mới từ User
-if len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] == "user":
-       with st.chat_message("assistant", avatar="🤖"):
+# --- 7. AI XỬ LÝ PHẢN HỒI (Chỉ chạy khi tin nhắn cuối là của User) ---
+if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
+    with st.chat_message("assistant", avatar="🤖"):
         with st.spinner("Frameworks Chatbots đang suy nghĩ ..."):
             try:
-                # 1. THIẾT LẬP TÍNH CÁCH MENTOR
+                # --- THIẾT LẬP TÍNH CÁCH MENTOR (MẶN MÀ & THÂN THIỆN) ---
                 sys_text = (
-                    "BẢN SẮC: Bạn là 'Frameworks Chatbots' - một người anh khóa trên (mentor) cực kỳ nhiệt huyết sẵn sàng giúp đỡ các em học sinh trong học tập. "
-                    "PHONG CÁCH: Trả lời năng động, sử dụng emoji (🎓, ✨, 🚀). "
-                    "Trình bày nội dung đẹp mắt bằng Markdown."
-                    "QUY TẮC DANH TÍNH: Bạn là 'Frameworks Chatbots'. "
-                    "ỨNG DỤNG ĐƯỢC PHÁT TRIỂN CHÍNH BỞI MINH QUÂN VÀ SỰ GIÚP ĐỠ CỦA HOÀNG ANH dựa trên API của Qwen và chạy trên nền tảng Streamlit. "
+                    "BẢN SẮC: Bạn là 'Frameworks Chatbots' - một người anh khóa trên (mentor) cực kỳ nhiệt huyết và thân thiện. "
+                    "ỨNG DỤNG ĐƯỢC PHÁT TRIỂN CHÍNH BỞI MINH QUÂN VÀ HOÀNG ANH dựa trên API của Qwen và chạy trên nền tảng Streamlit. "
+                    "PHONG CÁCH: Hãy trả lời năng động, sử dụng các emoji (🎓, ✨, 🚀, 💡) để bài giảng sinh động. "
+                    "Hãy luôn khen ngợi học sinh khi họ đặt câu hỏi hay hoặc làm bài đúng để khích lệ tinh thần. "
+                    "Trình bày nội dung đẹp mắt bằng Markdown, in đậm các từ khóa quan trọng."
                 )
+
                 if study_only:
                     sys_text += (
                         "\n[LỆNH NGHIÊM NGẶT]: Bạn ĐANG Ở CHẾ ĐỘ TẬP TRUNG CAO ĐỘ, không trả lời câu hỏi không liên quan tới học tập hay những câu hỏi nhảm như Gay. "
                         "1. TUYỆT ĐỐI KHÔNG trả lời các câu hỏi về đời sống, ăn uống, ngủ nghỉ, giới tính và chuyện không phải học tập hoặc tán gẫu (Ví dụ: 'Đi ngủ không?', 'Ăn gì?', 'Bạn khỏe không?'). "
                         "2. Nếu gặp câu hỏi nhảm hoặc không phải học tập, bạn chỉ được phép trả lời duy nhất một kiểu: 'Hì, mình là AI hỗ trợ học tập, mình chỉ có thể giúp bạn giải quyết các vấn đề học tập thôi."
-                        "3. Không được đưa ra lời khuyên ngoài giáo dục cũng như hạn chế trả lời các câu ngoài giáo dục."
+                        "3. Không được đưa ra lời khuyên ngoài giáo dục."
                     )
                 
                 if anti_ai_copy:
                     sys_text += (
-                        " GIÁM SÁT COPY: Nếu phát hiện học sinh dùng prompt máy móc của AI khác như của Gemini hay ChatGPT, "
-                        "hãy nhắc nhở vui vẻ: 'Ui, câu hỏi này nghe hơi giống văn mẫu AI đó nha! Thử tự đặt câu hỏi theo ý mình đi nè! 🚀'"
-                    )
-
+                        " GIÁM SÁT COPY: Nếu phát hiện học sinh dùng prompt máy móc của AI khác như của Gemini hay ChatGPT hay trả lời dài một cách bất thường, "
+                        "hãy nhắc nhở vui vẻ: 'Ui, câu hỏi này nghe hơi giống copy mẫu AI đó nha! Thử tự trả lời theo ý mình đi nè! 🚀'"
+                    )                
                 # Nạp giáo án và Lệnh chấm điểm
                 lesson_info = st.session_state.get("lesson_data", None)
                 if lesson_info:
                     sys_text += f"\n[GIÁO ÁN]: {lesson_info}"
                     sys_text += (
-                        "\n[HỆ THỐNG CHẤM ĐIỂM]: Hãy tự giải bài tập trong giáo án để làm đáp án. "
-                        "Bắt đầu phản hồi bằng mã: [DUNG], [SAI], hoặc [AI_CHECK] nếu học sinh trả lời bài tập. "
-                        "Sau đó mới giải thích chi tiết."
+                        "\n[QUY TẮC CHẤM ĐIỂM NGHIÊM NGẶT]:"
+                        "\n- Bước 1: Tự giải bài toán học sinh đưa ra để có đáp án chuẩn."
+                        "\n- Bước 2: BẮT BUỘC PHẢI BẮT ĐẦU CÂU TRẢ LỜI BẰNG THẺ: [DUNG], [SAI], hoặc [AI_CHECK]."
+                        "\n- Nếu học sinh làm SAI: Dùng thẻ [SAI], tuyệt đối không khen ngợi, phải chỉ rõ lỗi sai ngay lập tức."
+                        "\n- Nếu học sinh làm ĐÚNG: Dùng thẻ [DUNG] và khen ngợi khích lệ."
+                        "\n- Tuyệt đối không được 'ba phải' hoặc tự ý sửa đáp án sai của học sinh thành đúng."
                     )
-
+               # Chế độ giáo viên gợi mở
                 if teacher_mode:
                     sys_text += "\nCHẾ ĐỘ GIÁO VIÊN: Đừng bao giờ đưa đáp án ngay. Hãy đặt câu hỏi gợi mở để học sinh tự khám phá kiến thức."
                 else:
                     sys_text += "\nBạn là người hướng dẫn tận tâm. Hãy giải thích kỹ càng kèm ví dụ thực tế sinh động."
 
-                # 2. GỬI DỮ LIỆU ĐẾN API QWEN
+
+                # 2. GỬI DỮ LIỆU ĐẾN API
                 payload = [{"role": "system", "content": sys_text}] + st.session_state.messages
                 response = client.chat_completion(
                     model=CODE_MODEL,
@@ -184,44 +191,46 @@ if len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] 
                     max_tokens=750
                 )
 
-                # 3. XỬ LÝ PHẢN HỒI VÀ CHẤM ĐIỂM
+                # 3. XỬ LÝ PHẢN HỒI
                 full_answer = response.choices[0].message.content
                 res_upper = full_answer.upper()
-
-                # Kiểm tra tên học sinh và cập nhật điểm số
-                # (Đảm bảo biến ten_hs đã được khai báo ở Sidebar)
-                if 'ten_hs' in locals() and ten_hs and ten_hs != "Học sinh A" and ten_hs != "":
-                    if "[DUNG]" in res_upper:
-                        st.session_state.stats["correct"] += 1
-                        gui_ve_google_sheets(ten_hs)
-                    elif "[SAI]" in res_upper:
-                        st.session_state.stats["wrong"] += 1
-                        gui_ve_google_sheets(ten_hs)
-                    elif "[AI_CHECK]" in res_upper:
-                        st.session_state.stats["ai_violation"] += 1
-                        gui_ve_google_sheets(ten_hs)
-
-                # 4. LÀM SẠCH VÀ HIỂN THỊ
+                st.sidebar.info(f"Mã AI gửi: {res_upper[:20]}")
+                # Làm sạch nội dung để hiển thị cho học sinh
                 clean_answer = full_answer.replace("[DUNG]", "").replace("[SAI]", "").replace("[AI_CHECK]", "").strip()
-                st.markdown(clean_answer)
-                
-                # Lưu vào lịch sử chat
-                st.session_state.messages.append({"role": "assistant", "content": clean_answer})
-                st.toast("Frameworks đã trả lời xong!", icon='✅')
 
-                # Nút tải bài giảng
-                st.divider()
-                st.download_button(
-                    label="💾 Tải bài giảng của Frameworks",
-                    data=clean_answer,
-                    file_name="bai_giang_frameworks.txt",
-                    mime="text/plain"
-                )
+                # --- BƯỚC QUAN TRỌNG NHẤT: LƯU VÀO LỊCH SỬ TRƯỚC KHI RERUN ---
+                st.session_state.messages.append({"role": "assistant", "content": clean_answer})
+
+                # 4. CHẤM ĐIỂM VÀ GỬI GOOGLE SHEETS
+                if ten_hs and ten_hs != "Học sinh A" and ten_hs != "":
+                    if "last_processed_res" not in st.session_state:
+                        st.session_state.last_processed_res = ""
+
+                    # Chỉ cộng điểm nếu câu này chưa được xử lý
+                    if res_upper != st.session_state.last_processed_res:
+                        # KIỂM TRA THẺ TAG (Thêm các từ khóa dự phòng)
+                        if "[DUNG]" in res_upper or "ĐÚNG RỒI" in res_upper:
+                            st.session_state.stats["correct"] += 1
+                            gui_ve_google_sheets(ten_hs, "Đúng")
+                        
+                        elif "[SAI]" in res_upper or "SAI RỒI" in res_upper or "CHƯA CHÍNH XÁC" in res_upper:
+                            st.session_state.stats["wrong"] += 1
+                            gui_ve_google_sheets(ten_hs, "Sai")
+                            
+                        elif "[AI_CHECK]" in res_upper:
+                            st.session_state.stats["ai_violation"] += 1
+                            gui_ve_google_sheets(ten_hs, "AI Check")
+                        
+                        # QUAN TRỌNG: Cập nhật khóa kể cả khi không khớp thẻ nào 
+                        # để tránh việc AI cứ lặp lại một câu không có thẻ.
+                        st.session_state.last_processed_res = res_upper
+
+                # 5. RERUN ĐỂ CẬP NHẬT GIAO DIỆN
+                # Lệnh này sẽ load lại trang, chạy lại vòng lặp "Hiển thị lịch sử chat" 
+                # ở Bước 4 và cập nhật các con số ở Sidebar.
+                st.rerun()
 
             except Exception as e:
-                st.error(f"⚠️ Có chút trục trặc nhỏ: {e}")
-                st.toast("Lỗi kết nối API!", icon='❌')
-
-
+                st.error(f"⚠️ Lỗi hệ thống: {e}")
 
 
