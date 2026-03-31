@@ -47,15 +47,15 @@ with st.sidebar:
 
     st.divider()
     # 1. Mục Tiến độ học tập
-    st.subheader("📊 Tiến độ học tập")
+    st.subheader("📊 Thống kê học tập")
     # Học sinh nhập tên ở đây (chỉ khai báo 1 lần duy nhất)
     ten_hs = st.text_input("Họ tên học sinh:", placeholder="Nhập tên để ghi nhận điểm...")
     
     # Hiển thị số liệu
     col1, col2, col3 = st.columns(3)
-    col1.metric("Đúng", st.session_state.stats["correct"])
-    col2.metric("Sai", st.session_state.stats["wrong"])
-    col3.metric("AI", st.session_state.stats["ai_violation"])
+    col1.metric("✅Đúng", st.session_state.stats["correct"])
+    col2.metric("❌Sai", st.session_state.stats["wrong"])
+    col3.metric("⚠️AI", st.session_state.stats["ai_violation"])
     
     st.divider()
 
@@ -81,7 +81,7 @@ with st.sidebar:
 
     st.divider()  
     with st.expander("Hướng dẫn sử dụng các chức năng📝"):
-        st.write("1. 📊 Chức năng tiến độ học tập : Hiển thị số câu trả lời đúng, sai và bị nghi ngờ và thông báo về máy chủ của giáo viên")
+        st.write("1. 📊 Chức năng thống kê học tập : Hiển thị số câu trả lời đúng, sai hoặc bị nghi ngờ sử dụng AI và thông báo về máy chủ của giáo viên theo thời gian thực.")
         st.write("2A. 👨‍🏫Chức năng lớp học: Giáo viên sẽ đưa học sinh mật khẩu và file .txt để học sinh nạp vào bộ nhớ AI để học tập.")
         st.write("2B. 📝Chức năng giao bài tập tự giáo án: AI sẽ dựa vào dữ liệu bài tập nạp vào và đề ra câu hỏi cho học sinh.")
         st.write("3. 👨‍🏫Chế độ giáo viên: AI sẽ chỉ đưa ra chỉ dẫn cho học sinh thay vì giải trực tiếp.")
@@ -89,14 +89,15 @@ with st.sidebar:
         st.write("5. 🛡️Chế độ giám sát: AI sẽ phân tích câu trả lời của học sinh sau khi làm bài tập và ngăn chặn các câu trả lời copy từ AI khác.")
         st.write("6. 🔥Độ sáng tạo: Biến số càng lớn thì AI trả lời càng bay bổng và ngược lại.")
         st.write("7. 🗑️Xóa lịch sử chat: Nhằm reset lịch sử trò truyện với AI")
-    with st.expander("Ghi chú cập nhật"):
+    with st.expander("Ghi chú cập nhật📍"):
         st.write("Version 1.0 : Bản cập nhật sơ khai của Frameworks Chatbots nhằm thử nghiệm các tính năng cơ bản và cốt lõi nhất.")
         st.write("Version 2.0 : Cập nhật thêm tính năng 👨‍🏫Lớp học và thay thế mục Cách tạo ra tôi thành Hướng dẫn sử dụng.")
         st.write("Version 2.1 : Cập nhật lại tính nắng 👨‍🏫Lớp học và cải thiện giao diện tổng thể.")
         st.write("Version 2.7 : Cập nhật thêm về hướng dẫn sử dụng các tính năng và thêm các tính năng như 🚫Chế độ tập trung và 🛡️Chế độ giám sát.")
-        st.write("Version 2.8 : Cải thiện tính năng 🚫Chế độ tập trung và thêm mục Ghi chú cập nhật cũng như cải thiện chất lượng phản hồi của Frameworks Chatbots")
-        st.write("Version 2.10 : Cập nhật mục 📊 Tiến độ học tập và ghi nhận điểm trên sever chủ cũng như cải thiện lại các chức năng sẵn có.") 
-        st.write("Version 2.11 ( Hiện tại ) : Cải thiện tính năng 📊 Tiến độ học tập và ghi nhận điểm cũng như vá lại một số lỗi nhỏ xung đột")
+        st.write("Version 2.8 : Cải thiện tính năng 🚫Chế độ tập trung và thêm mục Ghi chú cập nhật cũng như cải thiện chất lượng phản hồi của Frameworks Chatbots.")
+        st.write("Version 2.10 : Cập nhật mục 📊 Thống kê học tập và ghi nhận điểm trên sever chủ cũng như cải thiện lại các chức năng sẵn có.") 
+        st.write("Version 2.11 : Cải thiện tính năng 📊 Thống kê học tập và ghi nhận điểm cũng như vá lại một số lỗi nhỏ xung đột.")
+        st.write("Version 2.12 ( Hiện tại ) : Trang trí thêm về giao diện và thêm icon cho các tiện ích trong thanh sidebar.")
     st.divider()
     # Các chế độ hoạt động
     teacher_mode = st.toggle("👨‍🏫 Chế độ Giáo viên (Chỉ gợi ý)", value=True)
@@ -104,7 +105,7 @@ with st.sidebar:
     anti_ai_copy = st.toggle("🛡️ Chế độ giám sát (Chống Copy AI)", value=False)
     
     st.divider()
-    temp = st.slider("🔥 Độ sáng tạo", 0.1, 1.0, 0.7)
+    temp = st.slider("🔥Độ sáng tạo✨", 0.1, 1.0, 0.7)
     
     if st.button("🗑️ Xóa lịch sử bài học"):
         st.session_state.messages = []
@@ -125,7 +126,7 @@ if "messages" not in st.session_state:
 
 # --- 4. GIAO DIỆN CHÍNH ---
 st.title("🌐 Frameworks Chatbots")
-st.caption("Chuyên gia hỗ trợ học tập và giám sát học tập - Developed by M.Quân(Main Dev) & H.Anh(Support Dev) (Version:Demo2.11 - Final)")
+st.caption("⭐️Chuyên gia hỗ trợ học tập và giám sát học tập - 💻Được lập trình bởi M.Quân(Main Dev) & H.Anh(Support Dev)-(Version:Demo2.12 - Final)")
 
 # --- 5. HIỂN THỊ LỊCH SỬ CHAT ---
 # Vòng lặp này cực kỳ quan trọng để giữ lại tin nhắn cũ trên màn hình
