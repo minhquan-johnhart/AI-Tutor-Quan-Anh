@@ -165,7 +165,7 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
                 
                 if anti_ai_copy:
                     sys_text += (
-                        " GIÁM SÁT COPY: Nếu phát hiện học sinh dùng prompt máy móc của AI khác như của Gemini hay ChatGPT hay trả lời dài một cách bất thường, "
+                        " GIÁM SÁT COPY: Nếu phát hiện học sinh dùng prompt máy móc của AI khác như của Gemini hay ChatGPT hay trả lời dài một cách bất thường,lập tức dùng thẻ [AI_CHECK]."
                         "hãy nhắc nhở vui vẻ: 'Ui, câu hỏi này nghe hơi giống copy mẫu AI đó nha! Thử tự trả lời theo ý mình đi nè! 🚀'"
                     )                
                 # Nạp giáo án và Lệnh chấm điểm
@@ -174,10 +174,11 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
                     sys_text += f"\n[GIÁO ÁN]: {lesson_info}"
                     sys_text += (
                         "\n[QUY TẮC CHẤM ĐIỂM NGHIÊM NGẶT]:"
-                        "\n- Bước 1: Tự giải bài toán học sinh đưa ra để có đáp án chuẩn."
+                        "\n- Bước 1: Tự giải bài toán học sinh đưa ra để có đáp án chuẩn sau đó đối chiếu với kết quả của học sinh."
                         "\n- Bước 2: BẮT BUỘC PHẢI BẮT ĐẦU CÂU TRẢ LỜI BẰNG THẺ: [DUNG], [SAI], hoặc [AI_CHECK]."
                         "\n- Nếu học sinh làm SAI: Dùng thẻ [SAI], tuyệt đối không khen ngợi, phải chỉ rõ lỗi sai ngay lập tức."
                         "\n- Nếu học sinh làm ĐÚNG: Dùng thẻ [DUNG] và khen ngợi khích lệ."
+                        "\n- Nếu câu trả lời của học sinh có phần của AI giải hoặc prompt trả lời dài một cách bất thường hoặc dùng nhiều ngôn từ quá chuyên nghiệp thì dùng thẻ [AI_CHECK]."
                         "\n- Tuyệt đối không được 'ba phải' hoặc tự ý sửa đáp án sai của học sinh thành đúng."
                     )
                # Chế độ giáo viên gợi mở
