@@ -44,7 +44,7 @@ def show_settings():
     
     st.session_state.anti_ai_copy = st.toggle(
         "🛡️ Chế độ giám sát (Chống Copy AI)", 
-        value=st.session_state.get('anti_ai_copy', False)
+        value=st.session_state.get('anti_ai_copy', True)
     )
     if st.button("Lưu & Đóng"):
         st.rerun()
@@ -215,15 +215,16 @@ with st.sidebar:
         st.write("6. 🔥Độ sáng tạo: Biến số càng lớn thì AI trả lời càng bay bổng và ngược lại -thích hợp với văn học về sự bay bổng và toán học về sự logic-.")
         st.write("7. 🗑️Xóa lịch sử chat: Nhằm reset lịch sử trò truyện với AI")
     with st.expander("Ghi chú cập nhật📍"):
-        st.write("Version 1.0 : Bản cập nhật sơ khai của Frameworks Chatbots nhằm thử nghiệm các tính năng cơ bản và cốt lõi nhất.")
-        st.write("Version 2.0 : Cập nhật thêm tính năng 👨‍🏫Lớp học và thay thế mục Cách tạo ra tôi thành Hướng dẫn sử dụng.")
-        st.write("Version 2.1 : Cập nhật lại tính nắng 👨‍🏫Lớp học và cải thiện giao diện tổng thể.")
-        st.write("Version 2.7 : Cập nhật thêm về hướng dẫn sử dụng các tính năng và thêm các tính năng như 🚫Chế độ tập trung và 🛡️Chế độ giám sát.")
-        st.write("Version 2.8 : Cải thiện tính năng 🚫Chế độ tập trung và thêm mục Ghi chú cập nhật cũng như cải thiện chất lượng phản hồi của Frameworks Chatbots.")
-        st.write("Version 2.10 : Cập nhật mục 📊 Thống kê học tập và ghi nhận điểm trên sever chủ cũng như cải thiện lại các chức năng sẵn có.") 
-        st.write("Version 2.11 : Cải thiện tính năng 📊 Thống kê học tập và ghi nhận điểm cũng như vá lại một số lỗi nhỏ xung đột.")
-        st.write("Version 2.12 : Trang trí thêm về giao diện và thêm icon cho các tiện ích trong thanh sidebar.")
-        st.write("Version Neo3.0 ( Hiện tại ) : Thêm page Thư viện 📚, đưa các chế độ của chatbots vào thanh ⚙️ Cài đặt hệ thống, thay API Qwen2.5-7B Instruct thành bản Qwen2.5-32B Instruct, cải thiện prompt engine.")
+        st.write("Version Demo1.0 : Bản cập nhật sơ khai của Frameworks Chatbots nhằm thử nghiệm các tính năng cơ bản và cốt lõi nhất.")
+        st.write("Version Demo2.0 : Cập nhật thêm tính năng 👨‍🏫Lớp học và thay thế mục Cách tạo ra tôi thành Hướng dẫn sử dụng.")
+        st.write("Version Demo2.1 : Cập nhật lại tính nắng 👨‍🏫Lớp học và cải thiện giao diện tổng thể.")
+        st.write("Version Demo2.7 : Cập nhật thêm về hướng dẫn sử dụng các tính năng và thêm các tính năng như 🚫Chế độ tập trung và 🛡️Chế độ giám sát.")
+        st.write("Version Demo2.8 : Cải thiện tính năng 🚫Chế độ tập trung và thêm mục Ghi chú cập nhật cũng như cải thiện chất lượng phản hồi của Frameworks Chatbots.")
+        st.write("Version Demo2.10 : Cập nhật mục 📊 Thống kê học tập và ghi nhận điểm trên sever chủ cũng như cải thiện lại các chức năng sẵn có.") 
+        st.write("Version Demo2.11 : Cải thiện tính năng 📊 Thống kê học tập và ghi nhận điểm cũng như vá lại một số lỗi nhỏ xung đột.")
+        st.write("Version Demo2.12-Final : Trang trí thêm về giao diện và thêm icon cho các tiện ích trong thanh sidebar.")
+        st.write("Version Neo3.0 : Thêm page Thư viện 📚, đưa các chế độ của chatbots vào thanh ⚙️ Cài đặt hệ thống, thay API Qwen2.5-7B Instruct thành bản Qwen2.5-32B Instruct, cải thiện prompt engine.")
+        st.write("Version Neo3.1 ( Hiện tại ) : Tối ưu prompt engineering cho tính năng giám sát chống copy AI và chế độ giáo viên, câu trả lời của chatbot giờ sẽ là dạng streaming.")
     st.divider()
     temp = st.slider("🔥Độ sáng tạo✨", 0.1, 1.0, 0.7)
     if st.button("🗑️ Xóa lịch sử bài học"):
@@ -249,7 +250,7 @@ if "messages" not in st.session_state:
 
 # --- 4. GIAO DIỆN CHÍNH ---
 st.title("🌐 Frameworks Chatbots")
-st.caption("⭐️Chuyên gia hỗ trợ học tập và giám sát học tập - 💻Được lập trình bởi M.Quân(Main Dev) & H.Anh(Support Dev)-(Version:Neo3.0✨)")
+st.caption("⭐️Chuyên gia hỗ trợ học tập và giám sát học tập - 💻Được lập trình bởi M.Quân(Main Dev) & H.Anh(Support Dev)-(Version:Neo3.1✨)")
 st.caption("👨‍🎓Vì một môi trường học tập minh bạch, chính xác và tiến bộ!📈")
 
 # --- 5. HIỂN THỊ LỊCH SỬ CHAT ---
@@ -287,10 +288,12 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
                         "3. Không được đưa ra lời khuyên ngoài giáo dục."
                     )
                 
-                if st.session_state.get('anti_ai_copy', False):
+                if st.session_state.get('anti_ai_copy', True):
                     sys_text += (
-                        " GIÁM SÁT COPY: Nếu phát hiện học sinh dùng prompt máy móc của AI khác như của Gemini hay ChatGPT hay trả lời dài một cách bất thường hoặc quá chuyên nghiệp,lập tức dùng thẻ [AI_CHECK]."
-                        "hãy nhắc nhở vui vẻ: 'Ui, câu trả lời này nghe hơi giống copy của AI đó nha! Thử tự trả lời theo ý mình đi nè!'"
+                        "\n- GIÁM SÁT COPY: Nếu phát hiện học sinh dùng prompt máy móc của AI khác như của Gemini hay ChatGPT để trả lời câu hỏi. Chẳng hạn dài một cách bất thường hoặc quá chuyên nghiệp, lập tức dùng thẻ [AI_CHECK]."
+                        "\n- hãy nhắc nhở học sinh để học sinh tự làm bài chứ không phải dùng AI để giải bài hộ."
+                        "\n- nếu học sinh trả lời đúng thì hãy hỏi vì sao học sinh làm được như vậy và áp dụng những kiến thức gì để xem học sinh có thực sự làm hay không."
+                        "\n- Nếu nghi ngờ học sinh dùng AI (thẻ [AI_CHECK]), sau khi nhắc nhở, hãy TRÍCH DẪN một câu ngắn từ câu trả lời của học sinh và hỏi: 'Ý này em tự viết hay tham khảo ở đâu? Em giải thích rõ hơn cho mình cụm từ [từ_khóa] này được không?'"
                     )                
                 # Nạp giáo án và Lệnh chấm điểm
                 lesson_info = st.session_state.get("lesson_data", None)
@@ -304,13 +307,13 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
                         "\n- Nếu học sinh làm ĐÚNG: Dùng thẻ [DUNG] và khen ngợi khích lệ."
                         "\n- Nếu câu trả lời của học sinh có phần của AI giải hoặc prompt trả lời dài một cách bất thường hoặc dùng nhiều ngôn từ quá chuyên nghiệp thì dùng thẻ [AI_CHECK]."
                         "\n- Tuyệt đối không được 'ba phải' hoặc tự ý sửa đáp án sai của học sinh thành đúng."
+                        "\n- Ưu tiên giảng dạy theo dữ liệu được nạp vào và bám sát nội dung học."
                     )
                # Chế độ giáo viên gợi mở
                 if st.session_state.get('teacher_mode', True):
-                    sys_text += "\nCHẾ ĐỘ GIÁO VIÊN: Đừng bao giờ đưa đáp án ngay. Hãy đặt câu hỏi gợi mở để học sinh tự khám phá kiến thức."
+                    sys_text += "\nCHẾ ĐỘ GIÁO VIÊN: Đừng bao giờ đưa đáp án ngay. Hãy đặt câu hỏi gợi mở để học sinh tự khám phá kiến thức, hãy luôn bảo học sinh đưa ra đáp án trước."
                 else:
-                    sys_text += "\nBạn là người hướng dẫn tận tâm. Hãy giải thích kỹ càng nhưng hãy hạn chế đưa ra đáp án và đưa ra dạng bài tập tương tự để học sinh áp dụng."
-
+                    sys_text += "\nBạn là người hướng dẫn tận tâm. Hãy giải thích kỹ càng nhưng hãy hạn chế đưa ra đáp án và đưa ra dạng bài tập tương tự để học sinh áp dụng lại."
 
                 # 2. GỬI DỮ LIỆU ĐẾN API
                 payload = [{"role": "system", "content": sys_text}] + st.session_state.messages
@@ -318,19 +321,33 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
                     model=CODE_MODEL,
                     messages=payload,
                     temperature=temp,
-                    max_tokens=750
+                    max_tokens=750,
+                    stream=True
                 )
 
                 # 3. XỬ LÝ PHẢN HỒI
-                full_answer = response.choices[0].message.content
+                def text_generator():
+                    for chunk in response:
+                        try:
+                            # Kiểm tra xem gói tin có chứa dữ liệu hợp lệ không
+                            if hasattr(chunk, 'choices') and len(chunk.choices) > 0:
+                                content = chunk.choices[0].delta.content
+                                if content:
+                                    yield content
+                        except (AttributeError, IndexError):
+                            continue # Bỏ qua nếu gói tin đó bị lỗi định dạng
+
+                # Hiển thị chữ chạy trên màn hình
+                full_answer = st.write_stream(text_generator())
+
+                # Xử lý hậu kỳ
                 res_upper = full_answer.upper()
                 st.sidebar.info(f"Mã AI gửi: {res_upper[:20]}")
-                  # Làm sạch nội dung để hiển thị cho học sinh
+                
                 clean_answer = full_answer.replace("[DUNG]", "").replace("[SAI]", "").replace("[AI_CHECK]", "").strip()
 
-                # --- BƯỚC QUAN TRỌNG NHẤT: LƯU VÀO LỊCH SỬ TRƯỚC KHI RERUN ---
+                # --- LƯU VÀO LỊCH SỬ ---
                 st.session_state.messages.append({"role": "assistant", "content": clean_answer})
-
                 # 4. CHẤM ĐIỂM VÀ GỬI GOOGLE SHEETS
                 if ten_hs and ten_hs != "Học sinh A" and ten_hs != "":
                     if "last_processed_res" not in st.session_state:
