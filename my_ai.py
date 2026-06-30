@@ -25,7 +25,7 @@ def gui_ve_google_sheets(ten_hoc_sinh, ket_qua): # Thêm tham số ket_qua
     except:
         pass
 # --- 1. CẤU HÌNH GIAO DIỆN & STYLE ---
-st.set_page_config(page_title="Frameworks Chatbots", layout="wide", page_icon="🎓")
+st.set_page_config(page_title="Smart Asis", layout="wide", page_icon="🎓")
 @st.dialog("⚙️ Cài đặt hệ thống")
 def show_settings():
     st.write("Tùy chỉnh chế độ hoạt động của Chatbot")
@@ -76,7 +76,7 @@ if menu == "Thư viện📚":
     st.header("📚 Thư viện tài liệu")
     st.caption("📑Thư viện file , nơi tổng hợp và chứa các đề án, giáo án, bài tập,... - 💻Được lập trình và quản lí bởi M.Quân(Engine Dev) & H.Anh(Idea & Q/A Dev)-")
     with st.sidebar:
-        st.title("Thư viện📚-Frameworks Chatbots-")
+        st.title("Thư viện📚-Smart Asis-")
         st.markdown("Dự án bởi: **Minh Quân & Hoàng Anh**")
         st.divider()
         st.write("Mẹo nhỏ 💡: Bạn có thể tìm thấy những bài tập cũng như bài giảng cũ nếu giáo viên nạp vào ở đây để học lại!")
@@ -152,7 +152,7 @@ st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2A9LHMxk2bl5e9O
 
 # --- 2. PHẦN SIDEBAR ---
 with st.sidebar:
-    st.title("🎓 Frameworks Chatbots")
+    st.title("🎓 Smart Asis")
     st.markdown("Dự án bởi: **Minh Quân & Hoàng Anh**")
     st.divider()
     st.image(
@@ -215,7 +215,7 @@ with st.sidebar:
         st.write("6. 🔥Độ sáng tạo: Biến số càng lớn thì AI trả lời càng bay bổng và ngược lại -thích hợp với văn học về sự bay bổng và toán học về sự logic-.")
         st.write("7. 🗑️Xóa lịch sử chat: Nhằm reset lịch sử trò truyện với AI")
     with st.expander("Ghi chú cập nhật📍"):
-        st.write("Version Demo1.0 : Bản cập nhật sơ khai của Frameworks Chatbots nhằm thử nghiệm các tính năng cơ bản và cốt lõi nhất.")
+        st.write("Version Demo1.0 : Bản cập nhật sơ khai của Smart Asis nhằm thử nghiệm các tính năng cơ bản và cốt lõi nhất.")
         st.write("Version Demo2.0 : Cập nhật thêm tính năng 👨‍🏫Lớp học và thay thế mục Cách tạo ra tôi thành Hướng dẫn sử dụng.")
         st.write("Version Demo2.1 : Cập nhật lại tính nắng 👨‍🏫Lớp học và cải thiện giao diện tổng thể.")
         st.write("Version Demo2.7 : Cập nhật thêm về hướng dẫn sử dụng các tính năng và thêm các tính năng như 🚫Chế độ tập trung và 🛡️Chế độ giám sát.")
@@ -223,7 +223,7 @@ with st.sidebar:
         st.write("Version Demo2.10 : Cập nhật mục 📊 Thống kê học tập và ghi nhận điểm trên sever chủ cũng như cải thiện lại các chức năng sẵn có.") 
         st.write("Version Demo2.11 : Cải thiện tính năng 📊 Thống kê học tập và ghi nhận điểm cũng như vá lại một số lỗi nhỏ xung đột.")
         st.write("Version Demo2.12-Final : Trang trí thêm về giao diện và thêm icon cho các tiện ích trong thanh sidebar.")
-        st.write("Version Neo3.0 : Thêm page Thư viện 📚, đưa các chế độ của chatbots vào thanh ⚙️ Cài đặt hệ thống, thay API Qwen2.5-7B Instruct thành bản Qwen2.5-32B Instruct, cải thiện prompt engine.")
+        st.write("Version Neo3.0 : Thêm page Thư viện 📚, đưa các chế độ của chatbots vào thanh ⚙️ Cài đặt hệ thống, thay API Qwen2.5-Coder-7B Instruct thành bản Qwen2.5-Coder-32B Instruct, cải thiện prompt engine.")
         st.write("Version Neo3.1 ( Hiện tại ) : Tối ưu prompt engineering cho tính năng giám sát chống copy AI và chế độ giáo viên, câu trả lời của chatbot giờ sẽ là dạng streaming.")
     st.divider()
     temp = st.slider("🔥Độ sáng tạo✨", 0.1, 1.0, 0.7)
@@ -249,7 +249,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # --- 4. GIAO DIỆN CHÍNH ---
-st.title("🌐 Frameworks Chatbots")
+st.title("🌐 Smart Asis")
 st.caption("⭐️Chuyên gia hỗ trợ học tập và giám sát học tập - 💻Được lập trình bởi M.Quân(Main Dev) & H.Anh(Support Dev)-(Version:Neo3.1✨)")
 st.caption("👨‍🎓Vì một môi trường học tập minh bạch, chính xác và tiến bộ!📈")
 
@@ -273,7 +273,7 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
             try:
                 # --- THIẾT LẬP TÍNH CÁCH ---
                 sys_text = (
-                    "BẢN SẮC: Bạn là 'Frameworks Chatbots' - một người thầy giáo cực kỳ nhiệt huyết và thân thiện. "
+                    "BẢN SẮC: Bạn là 'Smart Asis' - một người thầy giáo cực kỳ nhiệt huyết và thân thiện. "
                     "ỨNG DỤNG ĐƯỢC PHÁT TRIỂN CHÍNH BỞI MINH QUÂN VÀ HOÀNG ANH dựa trên API của Qwen và chạy trên nền tảng Streamlit. "
                     "PHONG CÁCH: Hãy trả lời năng động, sử dụng các emoji (🎓, ✨, 🚀, 💡) để bài giảng sinh động. "
                     "Hãy luôn khen ngợi học sinh khi họ đặt câu hỏi hay hoặc làm bài đúng để khích lệ tinh thần. "
